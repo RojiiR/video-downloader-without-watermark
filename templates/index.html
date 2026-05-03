@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ZII WEB</title>
+<script src="https://cdn.tailwindcss.com"></script>
+
+<style>
+    @keyframes marquee {
+        0% { transform: translateX(100%); }
+        100% { transform: translateX(-100%); }
+    }
+
+    .marquee {
+        white-space: nowrap;
+        display: inline-block;
+        animation: marquee 15s linear infinite;
+    }
+
+    .btn-platform {
+        transition: all 0.25s ease;
+        transform: scale(1);
+    }
+
+    .btn-platform:hover {
+        transform: scale(1.12);
+    }
+
+    .active {
+        transform: scale(1.12) !important;
+    }
+</style>
+</head>
+
+<body class="bg-gray-50 flex flex-col justify-between min-h-screen">
+
+<div class="flex items-center justify-center flex-grow p-4">
+
+    <div class="bg-white w-full max-w-md p-8 rounded-2xl shadow-[0_10px_30px_rgba(0,0,0,0.2)] text-center">
+
+        <h1 class="text-2xl font-semibold text-gray-800 mb-6">
+            Download Video Without Watermark
+        </h1>
+
+        <!-- PLATFORM -->
+        <div class="flex justify-center gap-6 mb-8">
+
+            <!-- TikTok -->
+            <button onclick="setPlatform('tiktok')" id="btn-tiktok"
+                class="btn-platform p-3 rounded-full bg-gray-200">
+                <svg width="28" height="28" viewBox="0 0 48 48" fill="black">
+                    <path d="M41 16.5c-3.5 0-6.8-1.2-9.4-3.3v14.6c0 7.2-5.8 13-13 13s-13-5.8-13-13 5.8-13 13-13c.6 0 1.2 0 1.8.1v6.5c-.6-.2-1.2-.3-1.8-.3-3.7 0-6.7 3-6.7 6.7s3 6.7 6.7 6.7 6.7-3 6.7-6.7V3h6.7c.3 3.3 2.8 6.1 6 6.7v6.8z"/>
+                </svg>
+            </button>
+
+            <!-- Instagram -->
+            <button onclick="setPlatform('instagram')" id="btn-instagram"
+                class="btn-platform p-3 rounded-full bg-gray-200">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
+                    <rect x="2" y="2" width="20" height="20" rx="5" stroke="black" stroke-width="2"/>
+                    <circle cx="12" cy="12" r="4" stroke="black" stroke-width="2"/>
+                    <circle cx="17" cy="7" r="1.5" fill="black"/>
+                </svg>
+            </button>
+
+            <!-- YouTube -->
+            <button onclick="setPlatform('youtube')" id="btn-youtube"
+                class="btn-platform p-3 rounded-full bg-gray-200">
+                <svg width="30" height="22" viewBox="0 0 48 34" fill="red">
+                    <path d="M46.5 5.5c-.5-2-2-3.5-4-4C39 1 24 1 24 1S9 1 5.5 1.5c-2 .5-3.5 2-4 4C1 9 1 17 1 17s0 8 0.5 11.5c.5 2 2 3.5 4 4C9 33 24 33 24 33s15 0 18.5-.5c2-.5 3.5-2 4-4C47 25 47 17 47 17s0-8-.5-11.5zM19 24V10l12 7-12 7z"/>
+                </svg>
+            </button>
+
+        </div>
+
+        <!-- FORM -->
+        <form action="/download" method="POST" class="space-y-4">
+            <input type="hidden" name="platform" id="platform" value="tiktok">
+
+            <input type="text"
+                id="url-input"
+                name="url"
+                placeholder="Tempel link TikTok di sini..."
+                class="w-full border border-gray-300 rounded-lg px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-black"
+                required>
+
+            <button type="submit"
+                class="w-full bg-black text-white py-3 rounded-lg text-sm hover:opacity-90 transition">
+                Download
+            </button>
+        </form>
+
+    </div>
+</div>
+
+<!-- RUNNING TEXT -->
+<div class="bg-black text-white py-2 overflow-hidden text-sm">
+    <div class="marquee">
+        • BELI CAPCUT PRO & CANVA PRO MURAH, HUB : 085649729250 • BELI CAPCUT PRO & CANVA PRO MURAH, HUB : 085649729250 • CANVA PRO 5K SATU BULAN || CAPCUT PRO 10K SATU BULAN •
+    </div>
+</div>
+
+<script>
+function setPlatform(type) {
+    const input = document.getElementById('url-input');
+    const platformInput = document.getElementById('platform');
+
+    platformInput.value = type;
+
+    const configs = {
+        tiktok: {
+            color: 'bg-slate-900/80 text-white',
+            hover: 'hover:bg-slate-900/80',
+            placeholder: 'Tempel link TikTok di sini...'
+        },
+        instagram: {
+            color: 'bg-pink-500/80 text-white',
+            hover: 'hover:bg-pink-500/80',
+            placeholder: 'Tempel link Instagram di sini...'
+        },
+        youtube: {
+            color: 'bg-red-600/80 text-white',
+            hover: 'hover:bg-red-600/80',
+            placeholder: 'Tempel link YouTube di sini...'
+        }
+    };
+
+    // RESET
+    ['tiktok','instagram','youtube'].forEach(p => {
+        const btn = document.getElementById('btn-' + p);
+        btn.className = "btn-platform p-3 rounded-full bg-gray-200 hover:bg-gray-300";
+    });
+
+    const btn = document.getElementById('btn-' + type);
+
+    // APPLY ACTIVE
+    btn.className = `btn-platform p-3 rounded-full ${configs[type].color} ${configs[type].hover} active`;
+
+    // UPDATE INPUT
+    input.placeholder = configs[type].placeholder;
+}
+</script>
+
+</body>
+</html>
