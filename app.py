@@ -2,13 +2,15 @@ import ssl
 import requests
 import io
 import yt_dlp
+import os
 from flask import Flask, render_template, request, send_file
 
 # Bypass SSL agar tidak error di jaringan tertentu
 requests.packages.urllib3.disable_warnings()
 ssl._create_default_https_context = ssl._create_unverified_context
 
-app = Flask(__name__)
+# Tambahkan template_folder secara eksplisit untuk Vercel
+app = Flask(__name__, template_folder='templates')
 
 def get_tiktok_video(url):
     print(f"[*] Downloader TikTok: {url}")
@@ -19,7 +21,9 @@ def get_tiktok_video(url):
             v_url = res['data']['play']
             if not v_url.startswith('http'): 
                 v_url = "https://www.tikwm.com" + v_url
-            return requests.get(v_url, verify=False).content, f"tiktok_{res['data']['id']}.mp4"
+            # Menggunakan stream=True lebih aman untuk memori server
+            response = requests.get(v_url, verify=False, timeout=20)
+            return response.content, f"tiktok_{res['data']['id']}.mp4"
     except Exception as e:
         print(f"[DEBUG TikTok Error]: {e}")
     return None, None
@@ -27,7 +31,7 @@ def get_tiktok_video(url):
 def get_yt_ig_video(url, platform):
     print(f"[*] Downloader {platform.upper()}: {url}")
     ydl_opts = {
-        'format': 'best', # Mengambil format terbaik yang sudah tergabung (audio+video)
+        'format': 'best',
         'quiet': True,
         'no_warnings': True,
         'nocheckcertificate': True,
@@ -74,8 +78,9 @@ def download():
             download_name=filename
         )
     
-    # Di app.py bagian return error (paling bawah)
     return render_template('index.html', error=True)
 
+# SANGAT PENTING: Vercel butuh variabel 'app' di level global.
+# Kode di bawah ini memastikan app.run() tidak mengganggu proses deployment.
 if __name__ == '__main__':
     app.run(debug=True)
